@@ -83,12 +83,17 @@ class CloudflareTunnelSensor(CoordinatorEntity, SensorEntity):
     @property
     def icon(self) -> str:
         """Return icon based on health state."""
-        return (
-            "mdi:cloud-check"
-            if self.native_value == "healthy"
-            else "mdi:cloud-off-outline"
-        )
-
+        icon_mapping = {
+            "healthy": "mdi:cloud-check-variant",
+            "down": "mdi:cloud-alert",
+            "degraded": "mdi:cloud-alert", # or mdi:cloud-question if you prefer
+            "unavailable": "mdi:cloud-alert",
+            "inactive": "mdi:cloud-off",
+            "unknown": "mdi:cloud-question"
+        }
+        
+        # Fallback to mdi:cloud-question if native_value is unexpected or None
+        return icon_mapping.get(self.native_value, "mdi:cloud-question")
 
 def _metrics_device_info(entry_id: str) -> dict[str, Any]:
     """Return shared device info for cloudflared metrics sensors."""
