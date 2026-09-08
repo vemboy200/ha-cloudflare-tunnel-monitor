@@ -51,8 +51,8 @@ rules:
     status: done
     comment: config_flow validates API credentials and/or the metrics endpoint before creating or updating the entry.
   test-before-setup:
-    status: todo
-    comment: The Cloudflare API coordinator correctly raises ConfigEntryNotReady via async_config_entry_first_refresh. The metrics coordinator degrades silently on failure instead, which means a metrics_url-only entry with an unreachable endpoint currently sets up "successfully" with zero entities.
+    status: done
+    comment: Both coordinators now call async_config_entry_first_refresh, which raises ConfigEntryNotReady on failure instead of setting up with zero entities.
   unique-config-entry:
     status: done
     comment: async_step_user sets a unique_id (account_id, falling back to metrics_url) and aborts on duplicates; async_step_reconfigure re-derives it and aborts if it would collide with a different existing entry. Removed the unused/misleading "single_instance_allowed" string this integration never actually enforced.

@@ -1,4 +1,3 @@
-import logging
 from dataclasses import dataclass
 
 from homeassistant.config_entries import ConfigEntry
@@ -12,8 +11,6 @@ from .coordinator import (
 )
 
 __all__ = ["parse_prometheus_text"]
-
-_LOGGER = logging.getLogger(__name__)
 
 
 @dataclass
@@ -45,14 +42,7 @@ async def async_setup_entry(
     metrics_url = entry.data.get(CONF_METRICS_URL)
     if metrics_url:
         metrics_coordinator = CloudflaredMetricsCoordinator(hass, entry, metrics_url)
-        try:
-            await metrics_coordinator.async_refresh()
-        except Exception as err:
-            _LOGGER.warning(
-                "Initial metrics refresh failed; continuing without metrics coordinator: %s",
-                err,
-            )
-            metrics_coordinator = None
+        await metrics_coordinator.async_config_entry_first_refresh()
 
     entry.runtime_data = CloudflareTunnelMonitorData(
         api_coordinator=api_coordinator,
