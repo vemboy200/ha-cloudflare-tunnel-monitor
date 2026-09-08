@@ -1,0 +1,154 @@
+rules:
+  # Bronze
+  action-setup:
+    status: exempt
+    comment: This integration does not register any custom actions.
+  appropriate-polling:
+    status: done
+    comment: DataUpdateCoordinator update_interval is 1 minute for both coordinators.
+  brands:
+    status: todo
+    comment: Not yet verified/submitted to home-assistant/brands.
+  common-modules:
+    status: todo
+    comment: Coordinators live in __init__.py rather than a dedicated coordinator.py.
+  config-flow-test-coverage:
+    status: done
+    comment: tests/test_config_flow.py covers validate_input branches (missing/partial credentials, metrics-only, API-only, both, invalid auth, unreachable).
+  config-flow:
+    status: done
+  dependency-transparency:
+    status: done
+    comment: Only requirements are aiohttp and async_timeout, both standard/PyPI-published and already bundled with Home Assistant.
+  docs-actions:
+    status: exempt
+    comment: This integration does not register any custom actions.
+  docs-triggers:
+    status: exempt
+    comment: This integration does not provide any triggers.
+  docs-conditions:
+    status: exempt
+    comment: This integration does not provide any conditions.
+  docs-high-level-description:
+    status: done
+  docs-installation-instructions:
+    status: done
+  docs-removal-instructions:
+    status: todo
+    comment: README does not currently document how to remove the integration.
+  entity-event-setup:
+    status: exempt
+    comment: All entities are CoordinatorEntity subclasses driven by coordinator polling; none subscribe to events/dispatcher signals directly.
+  entity-unique-id:
+    status: done
+  has-entity-name:
+    status: todo
+    comment: Entities set full descriptive _attr_name strings instead of using _attr_has_entity_name with short names combined with the device name.
+  runtime-data:
+    status: todo
+    comment: Coordinators are stored in hass.data[DOMAIN][entry.entry_id] rather than entry.runtime_data.
+  test-before-configure:
+    status: done
+    comment: config_flow validates API credentials and/or the metrics endpoint before creating or updating the entry.
+  test-before-setup:
+    status: todo
+    comment: The Cloudflare API coordinator correctly raises ConfigEntryNotReady via async_config_entry_first_refresh. The metrics coordinator degrades silently on failure instead, which means a metrics_url-only entry with an unreachable endpoint currently sets up "successfully" with zero entities.
+  unique-config-entry:
+    status: todo
+    comment: A "single_instance_allowed" translation string exists but is not wired to an actual _abort_if_unique_id_configured()/current-entries check in config_flow.py.
+
+  # Silver
+  action-exceptions:
+    status: exempt
+    comment: This integration does not register any custom actions.
+  config-entry-unloading:
+    status: done
+  docs-configuration-parameters:
+    status: done
+  docs-installation-parameters:
+    status: done
+  entity-unavailable:
+    status: done
+    comment: Handled automatically via CoordinatorEntity, which reports unavailable when coordinator.last_update_success is False.
+  integration-owner:
+    status: done
+    comment: manifest.json declares a codeowner.
+  log-when-unavailable:
+    status: done
+    comment: Both coordinators log a warning on fetch failure.
+  parallel-updates:
+    status: done
+    comment: PARALLEL_UPDATES = 0, correct for coordinator-based entities.
+  reauthentication-flow:
+    status: todo
+    comment: No async_step_reauth; an invalidated API token is not surfaced as a reauth prompt.
+  test-coverage:
+    status: todo
+    comment: Config flow and setup-entry branching now have test coverage; the ~900 lines of metric parsing/derivation logic in sensor.py do not yet.
+
+  # Gold
+  devices:
+    status: done
+    comment: All entities set device_info, grouped under a tunnels device and a metrics device.
+  diagnostics:
+    status: todo
+  discovery-update-info:
+    status: exempt
+    comment: Cloudflare tunnels are a cloud service, not locally discoverable.
+  discovery:
+    status: exempt
+    comment: Cloudflare tunnels are a cloud service, not locally discoverable.
+  docs-data-update:
+    status: todo
+  docs-examples:
+    status: todo
+  docs-known-limitations:
+    status: todo
+  docs-supported-devices:
+    status: exempt
+    comment: This integration monitors a cloud service/local process, not discrete supported hardware devices.
+  docs-supported-functions:
+    status: todo
+  docs-troubleshooting:
+    status: todo
+  docs-use-cases:
+    status: todo
+  dynamic-devices:
+    status: exempt
+    comment: Tunnels are represented as dynamically-added entities under one shared device per coordinator, not as separate devices.
+  entity-category:
+    status: todo
+    comment: No entities currently set entity_category (e.g. diagnostic) despite several being diagnostic in nature.
+  entity-device-class:
+    status: todo
+    comment: device_class is set on some sensors (e.g. process start time) but not consistently across applicable ones.
+  entity-disabled-by-default:
+    status: todo
+    comment: The ~50 metrics sensors are all enabled by default; many are low-level diagnostics that arguably should be opt-in.
+  entity-translations:
+    status: todo
+    comment: Depends on has-entity-name, which is not yet implemented.
+  exception-translations:
+    status: todo
+  icon-translations:
+    status: todo
+    comment: No icons.json; only CloudflareTunnelSensor sets a dynamic icon via a Python property.
+  reconfiguration-flow:
+    status: done
+    comment: async_step_reconfigure lets account_id/api_key/metrics_url be added or changed on an existing entry.
+  repair-issues:
+    status: todo
+  stale-devices:
+    status: exempt
+    comment: Tunnels are represented as entities under a shared device, not as separate devices; a tunnel removed from the account is not currently pruned from entities either, but there is no per-tunnel device to go stale.
+
+  # Platinum
+  async-dependency:
+    status: done
+    comment: aiohttp/async_timeout are both async-native.
+  inject-websession:
+    status: todo
+    comment: Coordinators call async_get_clientsession(hass) internally rather than having a session injected.
+  strict-typing:
+    status: todo
+    comment: device_info dicts and some function signatures (Any-typed coordinators) are not fully/strictly typed.

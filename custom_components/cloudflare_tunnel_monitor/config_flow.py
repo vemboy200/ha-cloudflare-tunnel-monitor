@@ -1,12 +1,25 @@
+import re
+from urllib.parse import urlparse
+
 import aiohttp
 import async_timeout
-import re
 import voluptuous as vol
-from urllib.parse import urlparse
 from homeassistant import config_entries, exceptions
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from .const import DOMAIN, CONF_API_KEY, CONF_ACCOUNT_ID, CONF_METRICS_URL, LABEL_API_KEY, LABEL_ACCOUNT_ID, LABEL_METRICS_URL, PLACEHOLDER_API_KEY, PLACEHOLDER_ACCOUNT_ID, PLACEHOLDER_METRICS_URL
+
+from .const import (
+    CONF_ACCOUNT_ID,
+    CONF_API_KEY,
+    CONF_METRICS_URL,
+    DOMAIN,
+    LABEL_ACCOUNT_ID,
+    LABEL_API_KEY,
+    LABEL_METRICS_URL,
+    PLACEHOLDER_ACCOUNT_ID,
+    PLACEHOLDER_API_KEY,
+    PLACEHOLDER_METRICS_URL,
+)
 
 # Constants
 URL = "https://api.cloudflare.com/client/v4/user/tokens/verify"

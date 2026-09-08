@@ -4,7 +4,7 @@ import logging
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from homeassistant.components.sensor import (
@@ -315,7 +315,7 @@ class CloudflaredProcessStartTimeSensor(CoordinatorEntity, SensorEntity):
         epoch = self.coordinator.data.get("unlabeled", {}).get(PROCESS_START_TIME_KEY)
         if epoch is None:
             return None
-        return datetime.fromtimestamp(epoch, tz=timezone.utc)
+        return datetime.fromtimestamp(epoch, tz=UTC)
 
 
 @dataclass(frozen=True, kw_only=True)
