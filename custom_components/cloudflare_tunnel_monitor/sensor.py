@@ -85,7 +85,7 @@ class CloudflareTunnelSensor(CoordinatorEntity, SensorEntity):
     def icon(self) -> str:
         """Return icon based on health state."""
         return {
-            "healthy": "mdi:cloud-check",
+            "healthy": "mdi:cloud-check-variant",
             "degraded": "mdi:cloud-alert",
             "inactive": "mdi:cloud-off-outline",
             "down": "mdi:cloud-remove",
