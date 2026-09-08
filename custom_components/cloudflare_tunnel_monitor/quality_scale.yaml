@@ -108,11 +108,13 @@ rules:
     status: exempt
     comment: This integration monitors a cloud service/local process, not discrete supported hardware devices.
   docs-supported-functions:
-    status: todo
+    status: done
+    comment: sensor-map.md lists every entity with its source metric, calculation, unit, state_class, and description.
   docs-troubleshooting:
     status: todo
   docs-use-cases:
-    status: todo
+    status: done
+    comment: README "What you can do with these sensors" section lists concrete automation scenarios.
   dynamic-devices:
     status: exempt
     comment: Tunnels are represented as dynamically-added entities under one shared device per coordinator, not as separate devices.

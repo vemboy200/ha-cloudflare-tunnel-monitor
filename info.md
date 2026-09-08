@@ -1,7 +1,13 @@
 # Cloudflare Tunnel Monitor Home Assistant Integration
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-![Cloudflare Tunnel Monitor|128](https://raw.githubusercontent.com/deadbeef3137/ha-cloudflare-tunnel-monitor/master/images/logo.png)
+![Cloudflare Tunnel Monitor|128](https://raw.githubusercontent.com/vemboy200/ha-cloudflare-tunnel-monitor/master/images/logo.png)
+
+## *** This is a personal fork ***
+
+This fork of [deadbeef3137/ha-cloudflare-tunnel-monitor](https://github.com/deadbeef3137/ha-cloudflare-tunnel-monitor) adds:
+- **Local-only setup**: `metrics_url` alone now works, no Cloudflare API token required
+- **Reconfigure support**: change your settings later via Settings → Devices & Services → Configure, without deleting and re-adding the integration
 
 ## *** IMPORTANT ***
 
@@ -51,9 +57,10 @@ This custom integration for Home Assistant allows users to monitor the status of
 
 ### Configuration Variables
 
-- `api_key`: Your Cloudflare API Token with `Account:Cloudflare Tunnel:Read` permissions
-- `account_id`: Your Cloudflare Account ID.
-- `metrics_url` *(optional)*: The URL of your local cloudflared Prometheus metrics endpoint (e.g. `http://10.0.30.5:20241/metrics`). When provided, the integration creates additional sensors for QUIC transport, throughput, latency, process health, and more.
+You need **either** Cloudflare API credentials **or** a metrics URL (or both).
+
+- `api_key` / `account_id` *(optional together)*: Your Cloudflare API Token with `Account:Cloudflare Tunnel:Read` permissions, and your Cloudflare Account ID. Must be provided together, not one without the other.
+- `metrics_url` *(optional)*: The URL of your local cloudflared Prometheus metrics endpoint (e.g. `http://10.0.30.5:20241/metrics`). When provided, the integration creates additional sensors for QUIC transport, throughput, latency, process health, and more. Works entirely on its own, no Cloudflare API token needed.
 
 
 ## Usage
@@ -64,7 +71,7 @@ If a `metrics_url` is configured, the integration also scrapes cloudflared's Pro
 
 ## Support
 
-If you encounter any issues or require further assistance, please raise an issue on this [GitHub repository](https://github.com/deadbeef3137/ha-cloudflare-tunnel-monitor/issues).
+Please raise issues specific to this fork (local-only setup, reconfigure flow) on [this repository](https://github.com/vemboy200/ha-cloudflare-tunnel-monitor/issues) rather than upstream.
 
 ## License
 
