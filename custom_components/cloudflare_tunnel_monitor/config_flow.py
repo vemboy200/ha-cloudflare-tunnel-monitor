@@ -7,6 +7,7 @@ import voluptuous as vol
 from homeassistant import config_entries, exceptions
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.service_info.hassio import HassioServiceInfo
 
 from .const import (
     CONF_ACCOUNT_ID,
@@ -137,6 +138,46 @@ class CloudflareConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Cloudflare config flow."""
 
     VERSION = 1
+    _hassio_discovery: HassioServiceInfo | None = None
+
+    async def async_step_hassio(
+        self, discovery_info: HassioServiceInfo
+    ) -> config_entries.ConfigFlowResult:
+        """Handle a Cloudflared app announcing its metrics endpoint.
+
+        Triggered by Supervisor Discovery (see app-cloudflared's
+        "discovery" service, which posts {"metrics_url": ...} under the
+        service name "cloudflare_tunnel_monitor").
+        """
+        metrics_url = discovery_info.config[CONF_METRICS_URL]
+
+        self._async_abort_entries_match({CONF_METRICS_URL: metrics_url})
+        await self.async_set_unique_id(discovery_info.uuid)
+        self._abort_if_unique_id_configured(updates={CONF_METRICS_URL: metrics_url})
+
+        self._hassio_discovery = discovery_info
+        return await self.async_step_hassio_confirm()
+
+    async def async_step_hassio_confirm(self, user_input=None):
+        """Confirm setup from a Supervisor-discovered metrics endpoint."""
+        assert self._hassio_discovery is not None
+        metrics_url = self._hassio_discovery.config[CONF_METRICS_URL]
+        errors: dict[str, str] = {}
+
+        if user_input is not None:
+            errors = await validate_input(self.hass, {CONF_METRICS_URL: metrics_url})
+            if not errors:
+                return self.async_create_entry(
+                    title="Cloudflare Tunnel Monitor",
+                    data={CONF_METRICS_URL: metrics_url},
+                )
+
+        self._set_confirm_only()
+        return self.async_show_form(
+            step_id="hassio_confirm",
+            description_placeholders={CONF_METRICS_URL: metrics_url},
+            errors=errors,
+        )
 
     async def async_step_user(self, user_input=None):
         """Handle a flow initiated by the user."""

@@ -10,7 +10,8 @@ is actually validated against a (mocked) HTTP response.
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-from cloudflare_tunnel_monitor import config_flow as cf
+
+from custom_components.cloudflare_tunnel_monitor import config_flow as cf
 
 
 def _make_response(status: int, text_body: str = ""):

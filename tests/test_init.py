@@ -2,8 +2,8 @@
 
 from unittest.mock import AsyncMock, MagicMock, patch
 
-import cloudflare_tunnel_monitor as cf_init
-from cloudflare_tunnel_monitor.const import CONF_METRICS_URL, DOMAIN
+import custom_components.cloudflare_tunnel_monitor as cf_init
+from custom_components.cloudflare_tunnel_monitor.const import CONF_METRICS_URL, DOMAIN
 
 
 def test_parse_prometheus_text_unlabeled_and_labeled():

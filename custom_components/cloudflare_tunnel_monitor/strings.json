@@ -14,6 +14,10 @@
             "api_key": "API Token (optional if using Metrics URL)",
             "metrics_url": "Metrics URL (optional if using API credentials)"
           }
+        },
+        "hassio_confirm": {
+          "title": "Cloudflare Tunnel Monitor",
+          "description": "A Cloudflared app on this Home Assistant instance announced its metrics endpoint: `{metrics_url}`. Set it up now? You can add Cloudflare API credentials later via Configure."
         }
       },
       "error": {
