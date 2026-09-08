@@ -93,11 +93,11 @@ rules:
   diagnostics:
     status: todo
   discovery-update-info:
-    status: exempt
-    comment: Cloudflare tunnels are a cloud service, not locally discoverable.
+    status: done
+    comment: async_step_hassio calls _abort_if_unique_id_configured(updates={CONF_METRICS_URL...}), updating an existing entry's metrics_url if the companion app's discovery info changes.
   discovery:
-    status: exempt
-    comment: Cloudflare tunnels are a cloud service, not locally discoverable.
+    status: done
+    comment: Companion app-cloudflared apps announce their metrics endpoint via Supervisor Discovery; async_step_hassio receives it and offers to set up the entry automatically.
   docs-data-update:
     status: todo
   docs-examples:

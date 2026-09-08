@@ -7,8 +7,8 @@ a metrics_url-only entry), and must simply add no tunnel entities.
 
 from unittest.mock import MagicMock
 
-import cloudflare_tunnel_monitor.sensor as cf_sensor
-from cloudflare_tunnel_monitor.const import DOMAIN
+import custom_components.cloudflare_tunnel_monitor.sensor as cf_sensor
+from custom_components.cloudflare_tunnel_monitor.const import DOMAIN
 
 
 async def test_setup_entry_with_no_coordinators_adds_no_entities():
