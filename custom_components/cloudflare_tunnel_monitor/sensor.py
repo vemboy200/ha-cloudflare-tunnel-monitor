@@ -806,23 +806,24 @@ async def async_setup_entry(
 
     entities: list[SensorEntity] = []
 
-    account_id = entry.data[CONF_ACCOUNT_ID]
+    account_id = entry.data.get(CONF_ACCOUNT_ID)
     known_tunnel_ids: set[str] = set()
-    for tunnel in api_coordinator.data or []:
-        tunnel_id = tunnel.get("id")
-        tunnel_name = tunnel.get("name")
-        if not tunnel_id or not tunnel_name:
-            continue
-        known_tunnel_ids.add(tunnel_id)
-        entities.append(
-            CloudflareTunnelSensor(
-                api_coordinator,
-                tunnel_id,
-                tunnel_name,
-                entry.entry_id,
-                account_id,
+    if api_coordinator is not None:
+        for tunnel in api_coordinator.data or []:
+            tunnel_id = tunnel.get("id")
+            tunnel_name = tunnel.get("name")
+            if not tunnel_id or not tunnel_name:
+                continue
+            known_tunnel_ids.add(tunnel_id)
+            entities.append(
+                CloudflareTunnelSensor(
+                    api_coordinator,
+                    tunnel_id,
+                    tunnel_name,
+                    entry.entry_id,
+                    account_id,
+                )
             )
-        )
 
     if metrics_coordinator is not None:
         entities.append(CloudflaredBuildVersionSensor(metrics_coordinator, entry.entry_id))
@@ -848,6 +849,9 @@ async def async_setup_entry(
 
     if entities:
         async_add_entities(entities, True)
+
+    if api_coordinator is None:
+        return
 
     @callback
     def _check_tunnels() -> None:
