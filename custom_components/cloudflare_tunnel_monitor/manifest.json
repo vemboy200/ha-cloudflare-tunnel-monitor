@@ -5,10 +5,10 @@
     "@deadbeef3137"
   ],
   "config_flow": true,
-  "documentation": "https://github.com/deadbeef3137/ha-cloudflare-tunnel-monitor/blob/master/README.md",
+  "documentation": "https://github.com/vemboy200/ha-cloudflare-tunnel-monitor/blob/master/README.md",
   "integration_type": "service",
   "iot_class": "cloud_push",
-  "issue_tracker": "https://github.com/deadbeef3137/ha-cloudflare-tunnel-monitor/issues",
+  "issue_tracker": "https://github.com/vemboy200/ha-cloudflare-tunnel-monitor/issues",
   "requirements": [
     "aiohttp",
     "async_timeout"

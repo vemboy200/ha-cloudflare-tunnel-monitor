@@ -1,5 +1,5 @@
 <div>
-<img src="https://raw.githubusercontent.com/deadbeef3137/ha-cloudflare-tunnel-monitor/master/images/logo.png" height="100">
+<img src="https://raw.githubusercontent.com/vemboy200/ha-cloudflare-tunnel-monitor/master/images/logo.png" height="100">
 
 # ☁️ Cloudflare Tunnel Monitor – Home Assistant Integration 
 
@@ -100,7 +100,7 @@ When you provide a `metrics_url`, the integration unlocks **~50 additional senso
 
 ## ✅ Install via HACS (Recommended)
 1. Click the **Open HACS Repository** button:  
-<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=deadbeef3137&repository=ha-cloudflare-tunnel-monitor&category=integration" target="_blank" rel="noreferrer noopener"><img src="https://my.home-assistant.io/badges/hacs_repository.svg" height="35" alt="Open in HACS"></a>
+<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=vemboy200&repository=ha-cloudflare-tunnel-monitor&category=integration" target="_blank" rel="noreferrer noopener"><img src="https://my.home-assistant.io/badges/hacs_repository.svg" height="35" alt="Open in HACS"></a>
 2. Click **Download**
 3. Restart Home Assistant
 4. Click the **Add integration in Home Assistant** button:  
@@ -156,10 +156,15 @@ Account
 
 ### 🧾 Configuration Variables
 
-- `api_key`: Your Cloudflare API Token with `Account:Cloudflare Tunnel:Read` permissions.
-- `account_id`: Your Cloudflare Account ID.
-- `metrics_url` *(optional)*: The URL of your local cloudflared Prometheus metrics endpoint (e.g. `http://10.0.30.5:20241/metrics`).  
+You need **either** Cloudflare API credentials **or** a metrics URL (or both) — steps 1 and 2 above are only needed if you want tunnel status sensors from the Cloudflare API.
+
+- `api_key` / `account_id` *(optional together)*: Your Cloudflare API Token (`Account:Cloudflare Tunnel:Read` permission) and Account ID. Enables the tunnel status sensors described above. Must be provided together, not one without the other.
+- `metrics_url` *(optional)*: The URL of your local cloudflared Prometheus metrics endpoint (e.g. `http://10.0.30.5:20241/metrics`). Enables the ~50 Metrics Mode sensors below. Works entirely on its own — **no Cloudflare API token needed** if this is the only thing you want.
     - 📈 See [`metrics-setup.md`](metrics-setup.md) for instructions on configuring your Cloudflared Tunnel to expose metrics over your LAN network.
+
+### 🔁 Changing settings later
+
+Go to **Settings → Devices & Services → Cloudflare Tunnel Monitor → Configure** to add or change your API credentials or metrics URL after initial setup — no need to remove and re-add the integration.
 
 ## 🚀 Usage
 
@@ -171,7 +176,7 @@ If a `metrics_url` is configured, the integration also scrapes cloudflared's Pro
 
 ## 🆘 Support
 
-If you encounter any issues or require further assistance, please raise an issue on this [GitHub repository](https://github.com/deadbeef3137/ha-cloudflare-tunnel-monitor/issues).
+This is a personal fork of [deadbeef3137/ha-cloudflare-tunnel-monitor](https://github.com/deadbeef3137/ha-cloudflare-tunnel-monitor), maintained independently. Please raise issues specific to this fork (local-only setup, reconfigure flow) on [this repository](https://github.com/vemboy200/ha-cloudflare-tunnel-monitor/issues) rather than upstream.
 
 ## 📜 License
 
@@ -181,18 +186,18 @@ This integration is released under the [MIT License](https://opensource.org/lice
 
 This project is not affiliated with or endorsed by Cloudflare. Cloudflare® is a registered trademark of Cloudflare, Inc.
 
-[commits-badge]: https://img.shields.io/github/commit-activity/y/deadbeef3137/ha-cloudflare-tunnel-monitor?style=for-the-badge&logo=github&logoColor=white&logoSize=auto&label=Commits
-[commits]: https://github.com/deadbeef3137/ha-cloudflare-tunnel-monitor/commits
+[commits-badge]: https://img.shields.io/github/commit-activity/y/vemboy200/ha-cloudflare-tunnel-monitor?style=for-the-badge&logo=github&logoColor=white&logoSize=auto&label=Commits
+[commits]: https://github.com/vemboy200/ha-cloudflare-tunnel-monitor/commits
 
-[contributors-badge]: https://img.shields.io/github/contributors/deadbeef3137/ha-cloudflare-tunnel-monitor?style=for-the-badge&logo=github&logoColor=white&logoSize=auto
-[contributors]: https://github.com/deadbeef3137/ha-cloudflare-tunnel-monitor/graphs/contributors
+[contributors-badge]: https://img.shields.io/github/contributors/vemboy200/ha-cloudflare-tunnel-monitor?style=for-the-badge&logo=github&logoColor=white&logoSize=auto
+[contributors]: https://github.com/vemboy200/ha-cloudflare-tunnel-monitor/graphs/contributors
 
-[releases-badge]: https://img.shields.io/github/release/deadbeef3137/ha-cloudflare-tunnel-monitor?style=for-the-badge&logo=github&logoColor=white&logoSize=auto
-[releases]: https://github.com/deadbeef3137/ha-cloudflare-tunnel-monitor/releases
+[releases-badge]: https://img.shields.io/github/release/vemboy200/ha-cloudflare-tunnel-monitor?style=for-the-badge&logo=github&logoColor=white&logoSize=auto
+[releases]: https://github.com/vemboy200/ha-cloudflare-tunnel-monitor/releases
 
-[hacs-badge]: https://img.shields.io/badge/HACS-Default-41BDF5?style=for-the-badge&logo=homeassistantcommunitystore&logoColor=white&logoSize=auto
+[hacs-badge]: https://img.shields.io/badge/HACS-Custom-41BDF5?style=for-the-badge&logo=homeassistantcommunitystore&logoColor=white&logoSize=auto
 [hacs]: https://hacs.xyz
 
-[license-badge]: https://img.shields.io/github/license/deadbeef3137/ha-cloudflare-tunnel-monitor?style=for-the-badge
+[license-badge]: https://img.shields.io/github/license/vemboy200/ha-cloudflare-tunnel-monitor?style=for-the-badge
 
-[license]: https://github.com/deadbeef3137/ha-cloudflare-tunnel-monitor/blob/master/LICENSE
+[license]: https://github.com/vemboy200/ha-cloudflare-tunnel-monitor/blob/master/LICENSE
