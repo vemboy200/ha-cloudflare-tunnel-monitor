@@ -83,11 +83,12 @@ class CloudflareTunnelSensor(CoordinatorEntity, SensorEntity):
     @property
     def icon(self) -> str:
         """Return icon based on health state."""
-        return (
-            "mdi:cloud-check"
-            if self.native_value == "healthy"
-            else "mdi:cloud-off-outline"
-        )
+        return {
+            "healthy": "mdi:cloud-check",
+            "degraded": "mdi:cloud-alert",
+            "inactive": "mdi:cloud-off-outline",
+            "down": "mdi:cloud-remove",
+        }.get(self.native_value, "mdi:cloud-question")
 
 
 def _metrics_device_info(entry_id: str) -> dict[str, Any]:
@@ -266,6 +267,8 @@ def _gc_pause_attrs(coordinator: Any) -> dict[str, Any]:
 class CloudflaredBuildVersionSensor(CoordinatorEntity, SensorEntity):
     """Expose build_info version as a string sensor with label attributes."""
 
+    _attr_icon = "mdi:tag-outline"
+
     def __init__(self, coordinator: Any, entry_id: str) -> None:
         """Initialize the build version sensor."""
         super().__init__(coordinator)
@@ -299,6 +302,7 @@ class CloudflaredProcessStartTimeSensor(CoordinatorEntity, SensorEntity):
     """Expose process_start_time_seconds as a timezone-aware datetime sensor."""
 
     _attr_device_class = SensorDeviceClass.TIMESTAMP
+    _attr_icon = "mdi:clock-start"
 
     def __init__(self, coordinator: Any, entry_id: str) -> None:
         """Initialize the process start time sensor."""
@@ -418,72 +422,84 @@ DIRECT_SENSORS: tuple[CloudflaredDirectSensorDescription, ...] = (
         name="Cloudflared Tunnel HA Connections",
         prometheus_key="cloudflared_tunnel_ha_connections",
         state_class=SensorStateClass.MEASUREMENT,
+        icon="mdi:lan-connect",
     ),
     CloudflaredDirectSensorDescription(
         key="cloudflared_tunnel_concurrent_requests_per_tunnel",
         name="Cloudflared Tunnel Concurrent Requests Per Tunnel",
         prometheus_key="cloudflared_tunnel_concurrent_requests_per_tunnel",
         state_class=SensorStateClass.MEASUREMENT,
+        icon="mdi:web",
     ),
     CloudflaredDirectSensorDescription(
         key="cloudflared_tunnel_total_requests",
         name="Cloudflared Tunnel Total Requests",
         prometheus_key="cloudflared_tunnel_total_requests",
         state_class=SensorStateClass.TOTAL_INCREASING,
+        icon="mdi:web",
     ),
     CloudflaredDirectSensorDescription(
         key="cloudflared_tunnel_request_errors",
         name="Cloudflared Tunnel Request Errors",
         prometheus_key="cloudflared_tunnel_request_errors",
         state_class=SensorStateClass.TOTAL_INCREASING,
+        icon="mdi:alert-circle-outline",
     ),
     CloudflaredDirectSensorDescription(
         key="cloudflared_proxy_connect_streams_errors",
         name="Cloudflared Proxy Connect Streams Errors",
         prometheus_key="cloudflared_proxy_connect_streams_errors",
         state_class=SensorStateClass.TOTAL_INCREASING,
+        icon="mdi:alert-octagon-outline",
     ),
     CloudflaredDirectSensorDescription(
         key="cloudflared_tcp_active_sessions",
         name="Cloudflared TCP Active Sessions",
         prometheus_key="cloudflared_tcp_active_sessions",
         state_class=SensorStateClass.MEASUREMENT,
+        icon="mdi:lan",
     ),
     CloudflaredDirectSensorDescription(
         key="cloudflared_tcp_total_sessions",
         name="Cloudflared TCP Total Sessions",
         prometheus_key="cloudflared_tcp_total_sessions",
         state_class=SensorStateClass.TOTAL_INCREASING,
+        icon="mdi:lan",
     ),
     CloudflaredDirectSensorDescription(
         key="cloudflared_udp_active_sessions",
         name="Cloudflared UDP Active Sessions",
         prometheus_key="cloudflared_udp_active_sessions",
         state_class=SensorStateClass.MEASUREMENT,
+        icon="mdi:access-point-network",
     ),
     CloudflaredDirectSensorDescription(
         key="cloudflared_udp_total_sessions",
         name="Cloudflared UDP Total Sessions",
         prometheus_key="cloudflared_udp_total_sessions",
         state_class=SensorStateClass.TOTAL_INCREASING,
+        icon="mdi:access-point-network",
     ),
     CloudflaredDirectSensorDescription(
         key="quic_client_total_connections",
         name="QUIC Client Total Connections",
         prometheus_key="quic_client_total_connections",
         state_class=SensorStateClass.TOTAL_INCREASING,
+        icon="mdi:connection",
     ),
     CloudflaredDirectSensorDescription(
         key="quic_client_closed_connections",
         name="QUIC Client Closed Connections",
         prometheus_key="quic_client_closed_connections",
         state_class=SensorStateClass.TOTAL_INCREASING,
+        icon="mdi:lan-disconnect",
     ),
     CloudflaredDirectSensorDescription(
         key="quic_client_packet_too_big_dropped",
         name="QUIC Client Packet Too Big Dropped",
         prometheus_key="quic_client_packet_too_big_dropped",
         state_class=SensorStateClass.TOTAL_INCREASING,
+        icon="mdi:package-variant-remove",
     ),
     CloudflaredDirectSensorDescription(
         key=PROCESS_RESIDENT_MEMORY_KEY,
@@ -493,6 +509,7 @@ DIRECT_SENSORS: tuple[CloudflaredDirectSensorDescription, ...] = (
         device_class=SensorDeviceClass.DATA_SIZE,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:memory",
     ),
     CloudflaredDirectSensorDescription(
         key=PROCESS_CPU_SECONDS_TOTAL_KEY,
@@ -502,18 +519,21 @@ DIRECT_SENSORS: tuple[CloudflaredDirectSensorDescription, ...] = (
         device_class=SensorDeviceClass.DURATION,
         state_class=SensorStateClass.TOTAL_INCREASING,
         suggested_display_precision=2,
+        icon="mdi:chip",
     ),
     CloudflaredDirectSensorDescription(
         key=PROCESS_OPEN_FDS_KEY,
         name="Process Open FDs",
         prometheus_key=PROCESS_OPEN_FDS_KEY,
         state_class=SensorStateClass.MEASUREMENT,
+        icon="mdi:file-multiple-outline",
     ),
     CloudflaredDirectSensorDescription(
         key=PROCESS_MAX_FDS_KEY,
         name="Process Max FDs",
         prometheus_key=PROCESS_MAX_FDS_KEY,
         state_class=SensorStateClass.MEASUREMENT,
+        icon="mdi:file-multiple-outline",
     ),
     CloudflaredDirectSensorDescription(
         key=PROCESS_NETWORK_RECEIVE_BYTES_TOTAL_KEY,
@@ -523,6 +543,7 @@ DIRECT_SENSORS: tuple[CloudflaredDirectSensorDescription, ...] = (
         device_class=SensorDeviceClass.DATA_SIZE,
         state_class=SensorStateClass.TOTAL_INCREASING,
         suggested_display_precision=2,
+        icon="mdi:download-network-outline",
     ),
     CloudflaredDirectSensorDescription(
         key=PROCESS_NETWORK_TRANSMIT_BYTES_TOTAL_KEY,
@@ -532,6 +553,7 @@ DIRECT_SENSORS: tuple[CloudflaredDirectSensorDescription, ...] = (
         device_class=SensorDeviceClass.DATA_SIZE,
         state_class=SensorStateClass.TOTAL_INCREASING,
         suggested_display_precision=2,
+        icon="mdi:upload-network-outline",
     ),
 )
 
@@ -542,6 +564,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         name="QUIC Active Connections",
         native_unit_of_measurement="connections",
         state_class=SensorStateClass.MEASUREMENT,
+        icon="mdi:lan-connect",
         value_fn=lambda c: len(_labeled_values(c.data, "quic_client_latest_rtt")) or None,
     ),
     CloudflaredDerivedSensorDescription(
@@ -551,6 +574,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DURATION,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:timer-outline",
         value_fn=lambda c: _metric_min(c, "quic_client_latest_rtt"),
     ),
     CloudflaredDerivedSensorDescription(
@@ -560,6 +584,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DURATION,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:timer-outline",
         value_fn=lambda c: _metric_pct(c, "quic_client_latest_rtt", 50),
     ),
     CloudflaredDerivedSensorDescription(
@@ -569,6 +594,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DURATION,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:timer-outline",
         value_fn=lambda c: _metric_pct(c, "quic_client_latest_rtt", 75),
     ),
     CloudflaredDerivedSensorDescription(
@@ -578,6 +604,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DURATION,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:timer-alert-outline",
         value_fn=lambda c: _metric_pct(c, "quic_client_latest_rtt", 95),
     ),
     CloudflaredDerivedSensorDescription(
@@ -587,6 +614,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DURATION,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:timer-outline",
         value_fn=lambda c: _metric_avg(c, "quic_client_latest_rtt"),
     ),
     CloudflaredDerivedSensorDescription(
@@ -596,6 +624,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DURATION,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:timer-alert-outline",
         value_fn=lambda c: _metric_max(c, "quic_client_latest_rtt"),
     ),
     CloudflaredDerivedSensorDescription(
@@ -605,6 +634,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DATA_SIZE,
         state_class=SensorStateClass.TOTAL_INCREASING,
         suggested_display_precision=2,
+        icon="mdi:upload",
         value_fn=lambda c: (
             sum(values)
             if (values := _labeled_values(c.data, "quic_client_sent_bytes"))
@@ -618,6 +648,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DATA_SIZE,
         state_class=SensorStateClass.TOTAL_INCREASING,
         suggested_display_precision=2,
+        icon="mdi:download",
         value_fn=lambda c: (
             sum(values)
             if (values := _labeled_values(c.data, "quic_client_receive_bytes"))
@@ -631,6 +662,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DATA_RATE,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:upload-network",
         value_fn=lambda c: c.sent_rate,
     ),
     CloudflaredDerivedSensorDescription(
@@ -640,6 +672,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DATA_RATE,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:download-network",
         value_fn=lambda c: c.recv_rate,
     ),
     CloudflaredDerivedSensorDescription(
@@ -649,6 +682,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DATA_RATE,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:upload-network-outline",
         value_fn=lambda c: _avg_bps(c, "quic_client_sent_bytes"),
     ),
     CloudflaredDerivedSensorDescription(
@@ -658,6 +692,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DATA_RATE,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:download-network-outline",
         value_fn=lambda c: _avg_bps(c, "quic_client_receive_bytes"),
     ),
     CloudflaredDerivedSensorDescription(
@@ -667,6 +702,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DATA_SIZE,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:gauge-low",
         value_fn=lambda c: _metric_min(c, "quic_client_congestion_window"),
     ),
     CloudflaredDerivedSensorDescription(
@@ -676,6 +712,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DATA_SIZE,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:gauge",
         value_fn=lambda c: _metric_avg(c, "quic_client_congestion_window"),
     ),
     CloudflaredDerivedSensorDescription(
@@ -685,6 +722,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DATA_SIZE,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:gauge-full",
         value_fn=lambda c: _metric_max(c, "quic_client_congestion_window"),
     ),
     CloudflaredDerivedSensorDescription(
@@ -694,6 +732,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DATA_SIZE,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:ruler",
         value_fn=lambda c: _metric_min(c, "quic_client_mtu"),
     ),
     CloudflaredDerivedSensorDescription(
@@ -703,6 +742,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DATA_SIZE,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:ruler",
         value_fn=lambda c: _metric_avg(c, "quic_client_mtu"),
     ),
     CloudflaredDerivedSensorDescription(
@@ -712,6 +752,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DATA_SIZE,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:ruler",
         value_fn=lambda c: _metric_max(c, "quic_client_mtu"),
     ),
     CloudflaredDerivedSensorDescription(
@@ -721,6 +762,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DATA_SIZE,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:package-variant",
         value_fn=lambda c: _metric_min(c, "quic_client_max_udp_payload"),
     ),
     CloudflaredDerivedSensorDescription(
@@ -730,6 +772,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DATA_SIZE,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:package-variant",
         value_fn=lambda c: _metric_avg(c, "quic_client_max_udp_payload"),
     ),
     CloudflaredDerivedSensorDescription(
@@ -739,6 +782,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DATA_SIZE,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:package-variant",
         value_fn=lambda c: _metric_max(c, "quic_client_max_udp_payload"),
     ),
     CloudflaredDerivedSensorDescription(
@@ -748,6 +792,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DURATION,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:transit-connection-variant",
         value_fn=_proxy_connect_avg,
         attrs_fn=_proxy_connect_attrs,
     ),
@@ -758,6 +803,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DURATION,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:api",
         value_fn=_rpc_client_avg,
         attrs_fn=_rpc_client_attrs,
     ),
@@ -768,6 +814,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DURATION,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:server-network",
         value_fn=_rpc_server_avg,
         attrs_fn=_rpc_server_attrs,
     ),
@@ -778,6 +825,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DURATION,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:recycle",
         value_fn=_gc_pause_avg,
         attrs_fn=_gc_pause_attrs,
     ),
@@ -788,6 +836,7 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
         device_class=SensorDeviceClass.DURATION,
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=2,
+        icon="mdi:recycle",
         value_fn=_gc_pause_max,
         attrs_fn=_gc_pause_attrs,
     ),
