@@ -7,8 +7,8 @@ rules:
     status: done
     comment: DataUpdateCoordinator update_interval is 1 minute for both coordinators.
   brands:
-    status: todo
-    comment: Not yet verified/submitted to home-assistant/brands.
+    status: done
+    comment: custom_integrations/cloudflare_tunnel_monitor already exists in home-assistant/brands (icon + logo, from upstream); the fork kept the same domain so it applies here too.
   common-modules:
     status: done
     comment: Coordinators and parse_prometheus_text now live in coordinator.py.
