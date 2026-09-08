@@ -42,8 +42,8 @@ rules:
   entity-unique-id:
     status: done
   has-entity-name:
-    status: todo
-    comment: Entities set full descriptive _attr_name strings instead of using _attr_has_entity_name with short names combined with the device name.
+    status: done
+    comment: All entity classes set _attr_has_entity_name = True; names shortened to drop what's now redundant with their device name ("Cloudflare Tunnels" / "cloudflared Metrics").
   runtime-data:
     status: done
     comment: Coordinators are stored on entry.runtime_data as a CloudflareTunnelMonitorData dataclass.

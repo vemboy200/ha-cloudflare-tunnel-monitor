@@ -46,6 +46,7 @@ def _normalize_number(value: float | int | None) -> float | int | None:
 class CloudflareTunnelSensor(CoordinatorEntity, SensorEntity):
     """Representation of a Cloudflare tunnel status sensor."""
 
+    _attr_has_entity_name = True
     _attr_device_class = SensorDeviceClass.ENUM
     _attr_options = ["inactive", "degraded", "healthy", "down"]
 
@@ -60,7 +61,7 @@ class CloudflareTunnelSensor(CoordinatorEntity, SensorEntity):
         """Initialize the tunnel sensor."""
         super().__init__(coordinator)
         self._tunnel_id = tunnel_id
-        self._attr_name = f"Cloudflare Tunnel {tunnel_name}"
+        self._attr_name = tunnel_name
         self._attr_unique_id = f"{DOMAIN}_{tunnel_id}"
         self._attr_device_info = {
             "identifiers": {(DOMAIN, f"{entry_id}_cloudflare_tunnels_{account_id}")},
@@ -267,13 +268,14 @@ def _gc_pause_attrs(coordinator: Any) -> dict[str, Any]:
 class CloudflaredBuildVersionSensor(CoordinatorEntity, SensorEntity):
     """Expose build_info version as a string sensor with label attributes."""
 
+    _attr_has_entity_name = True
     _attr_icon = "mdi:tag-outline"
 
     def __init__(self, coordinator: Any, entry_id: str) -> None:
         """Initialize the build version sensor."""
         super().__init__(coordinator)
         self._attr_unique_id = f"{entry_id}_cloudflared_build_version"
-        self._attr_name = "Cloudflared Build Version"
+        self._attr_name = "Build Version"
         self._attr_device_info = _metrics_device_info(entry_id)
 
     @property
@@ -301,6 +303,7 @@ class CloudflaredBuildVersionSensor(CoordinatorEntity, SensorEntity):
 class CloudflaredProcessStartTimeSensor(CoordinatorEntity, SensorEntity):
     """Expose process_start_time_seconds as a timezone-aware datetime sensor."""
 
+    _attr_has_entity_name = True
     _attr_device_class = SensorDeviceClass.TIMESTAMP
     _attr_icon = "mdi:clock-start"
 
@@ -340,6 +343,7 @@ class CloudflaredDerivedSensorDescription(SensorEntityDescription):
 class CloudflaredDirectMetricSensor(CoordinatorEntity, SensorEntity):
     """Sensor exposing an unlabeled metric directly from parsed Prometheus data."""
 
+    _attr_has_entity_name = True
     entity_description: CloudflaredDirectSensorDescription
 
     def __init__(
@@ -368,6 +372,7 @@ class CloudflaredDirectMetricSensor(CoordinatorEntity, SensorEntity):
 class CloudflaredDerivedMetricSensor(CoordinatorEntity, SensorEntity):
     """Sensor with value derived from one or more metrics."""
 
+    _attr_has_entity_name = True
     entity_description: CloudflaredDerivedSensorDescription
 
     def __init__(
@@ -419,63 +424,63 @@ class CloudflaredDerivedMetricSensor(CoordinatorEntity, SensorEntity):
 DIRECT_SENSORS: tuple[CloudflaredDirectSensorDescription, ...] = (
     CloudflaredDirectSensorDescription(
         key="cloudflared_tunnel_ha_connections",
-        name="Cloudflared Tunnel HA Connections",
+        name="Tunnel HA Connections",
         prometheus_key="cloudflared_tunnel_ha_connections",
         state_class=SensorStateClass.MEASUREMENT,
         icon="mdi:lan-connect",
     ),
     CloudflaredDirectSensorDescription(
         key="cloudflared_tunnel_concurrent_requests_per_tunnel",
-        name="Cloudflared Tunnel Concurrent Requests Per Tunnel",
+        name="Concurrent Requests Per Tunnel",
         prometheus_key="cloudflared_tunnel_concurrent_requests_per_tunnel",
         state_class=SensorStateClass.MEASUREMENT,
         icon="mdi:web",
     ),
     CloudflaredDirectSensorDescription(
         key="cloudflared_tunnel_total_requests",
-        name="Cloudflared Tunnel Total Requests",
+        name="Tunnel Total Requests",
         prometheus_key="cloudflared_tunnel_total_requests",
         state_class=SensorStateClass.TOTAL_INCREASING,
         icon="mdi:web",
     ),
     CloudflaredDirectSensorDescription(
         key="cloudflared_tunnel_request_errors",
-        name="Cloudflared Tunnel Request Errors",
+        name="Tunnel Request Errors",
         prometheus_key="cloudflared_tunnel_request_errors",
         state_class=SensorStateClass.TOTAL_INCREASING,
         icon="mdi:alert-circle-outline",
     ),
     CloudflaredDirectSensorDescription(
         key="cloudflared_proxy_connect_streams_errors",
-        name="Cloudflared Proxy Connect Streams Errors",
+        name="Proxy Connect Streams Errors",
         prometheus_key="cloudflared_proxy_connect_streams_errors",
         state_class=SensorStateClass.TOTAL_INCREASING,
         icon="mdi:alert-octagon-outline",
     ),
     CloudflaredDirectSensorDescription(
         key="cloudflared_tcp_active_sessions",
-        name="Cloudflared TCP Active Sessions",
+        name="TCP Active Sessions",
         prometheus_key="cloudflared_tcp_active_sessions",
         state_class=SensorStateClass.MEASUREMENT,
         icon="mdi:lan",
     ),
     CloudflaredDirectSensorDescription(
         key="cloudflared_tcp_total_sessions",
-        name="Cloudflared TCP Total Sessions",
+        name="TCP Total Sessions",
         prometheus_key="cloudflared_tcp_total_sessions",
         state_class=SensorStateClass.TOTAL_INCREASING,
         icon="mdi:lan",
     ),
     CloudflaredDirectSensorDescription(
         key="cloudflared_udp_active_sessions",
-        name="Cloudflared UDP Active Sessions",
+        name="UDP Active Sessions",
         prometheus_key="cloudflared_udp_active_sessions",
         state_class=SensorStateClass.MEASUREMENT,
         icon="mdi:access-point-network",
     ),
     CloudflaredDirectSensorDescription(
         key="cloudflared_udp_total_sessions",
-        name="Cloudflared UDP Total Sessions",
+        name="UDP Total Sessions",
         prometheus_key="cloudflared_udp_total_sessions",
         state_class=SensorStateClass.TOTAL_INCREASING,
         icon="mdi:access-point-network",
