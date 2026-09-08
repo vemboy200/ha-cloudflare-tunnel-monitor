@@ -13,12 +13,12 @@ from homeassistant.components.sensor import (
     SensorEntityDescription,
     SensorStateClass,
 )
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import UnitOfDataRate, UnitOfInformation, UnitOfTime
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
+from . import CloudflareTunnelMonitorConfigEntry
 from .const import CONF_ACCOUNT_ID, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -845,13 +845,12 @@ DERIVED_SENSORS: tuple[CloudflaredDerivedSensorDescription, ...] = (
 
 async def async_setup_entry(
     hass: HomeAssistant,
-    entry: ConfigEntry,
+    entry: CloudflareTunnelMonitorConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up Cloudflare tunnel + cloudflared metrics sensors from a config entry."""
-    data = hass.data[DOMAIN][entry.entry_id]
-    api_coordinator = data["api_coordinator"]
-    metrics_coordinator = data.get("metrics_coordinator")
+    api_coordinator = entry.runtime_data.api_coordinator
+    metrics_coordinator = entry.runtime_data.metrics_coordinator
 
     entities: list[SensorEntity] = []
 

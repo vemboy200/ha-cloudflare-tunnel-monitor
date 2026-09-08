@@ -10,8 +10,8 @@ rules:
     status: todo
     comment: Not yet verified/submitted to home-assistant/brands.
   common-modules:
-    status: todo
-    comment: Coordinators live in __init__.py rather than a dedicated coordinator.py.
+    status: done
+    comment: Coordinators and parse_prometheus_text now live in coordinator.py.
   config-flow-test-coverage:
     status: done
     comment: tests/test_config_flow.py covers validate_input branches (missing/partial credentials, metrics-only, API-only, both, invalid auth, unreachable).
@@ -45,8 +45,8 @@ rules:
     status: todo
     comment: Entities set full descriptive _attr_name strings instead of using _attr_has_entity_name with short names combined with the device name.
   runtime-data:
-    status: todo
-    comment: Coordinators are stored in hass.data[DOMAIN][entry.entry_id] rather than entry.runtime_data.
+    status: done
+    comment: Coordinators are stored on entry.runtime_data as a CloudflareTunnelMonitorData dataclass.
   test-before-configure:
     status: done
     comment: config_flow validates API credentials and/or the metrics endpoint before creating or updating the entry.

@@ -8,7 +8,7 @@ a metrics_url-only entry), and must simply add no tunnel entities.
 from unittest.mock import MagicMock
 
 import custom_components.cloudflare_tunnel_monitor.sensor as cf_sensor
-from custom_components.cloudflare_tunnel_monitor.const import DOMAIN
+from custom_components.cloudflare_tunnel_monitor import CloudflareTunnelMonitorData
 
 
 async def test_setup_entry_with_no_coordinators_adds_no_entities():
@@ -16,9 +16,9 @@ async def test_setup_entry_with_no_coordinators_adds_no_entities():
     entry = MagicMock()
     entry.entry_id = "entry1"
     entry.data = {}
-    hass.data = {
-        DOMAIN: {"entry1": {"api_coordinator": None, "metrics_coordinator": None}}
-    }
+    entry.runtime_data = CloudflareTunnelMonitorData(
+        api_coordinator=None, metrics_coordinator=None
+    )
 
     added = []
 
@@ -39,14 +39,9 @@ async def test_setup_entry_with_api_coordinator_adds_tunnel_sensors():
     api_coordinator = MagicMock()
     api_coordinator.data = [{"id": "tunnel-1", "name": "home", "status": "healthy"}]
 
-    hass.data = {
-        DOMAIN: {
-            "entry1": {
-                "api_coordinator": api_coordinator,
-                "metrics_coordinator": None,
-            }
-        }
-    }
+    entry.runtime_data = CloudflareTunnelMonitorData(
+        api_coordinator=api_coordinator, metrics_coordinator=None
+    )
 
     added = []
 
