@@ -34,8 +34,8 @@ rules:
   docs-installation-instructions:
     status: done
   docs-removal-instructions:
-    status: todo
-    comment: README does not currently document how to remove the integration.
+    status: done
+    comment: README "Removing the integration" section.
   entity-event-setup:
     status: exempt
     comment: All entities are CoordinatorEntity subclasses driven by coordinator polling; none subscribe to events/dispatcher signals directly.

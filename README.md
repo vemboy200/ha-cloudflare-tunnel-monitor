@@ -174,6 +174,10 @@ If a `metrics_url` is configured, the integration also scrapes cloudflared's Pro
 
 > 📎 See [`sensor-map.md`](sensor-map.md) for the full sensor registry.
 
+## 🗑️ Removing the integration
+
+Go to **Settings → Devices & Services → Cloudflare Tunnel Monitor**, open the three-dot menu, and select **Delete**. This removes the config entry and all of its sensors; no files or credentials are left behind on the Home Assistant side. If you installed this fork through HACS, you can also remove it from **HACS → Integrations** afterward to stop receiving updates.
+
 ## 🆘 Support
 
 This is a personal fork of [deadbeef3137/ha-cloudflare-tunnel-monitor](https://github.com/deadbeef3137/ha-cloudflare-tunnel-monitor), maintained independently. Please raise issues specific to this fork (local-only setup, reconfigure flow) on [this repository](https://github.com/vemboy200/ha-cloudflare-tunnel-monitor/issues) rather than upstream.
