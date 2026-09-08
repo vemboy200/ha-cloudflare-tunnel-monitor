@@ -29,7 +29,7 @@
         "unknown": "Unknown error, please check the logs."
       },
       "abort": {
-        "single_instance_allowed": "Only a single configuration of this integration is allowed.",
+        "already_configured": "A config entry already exists for this account or metrics URL.",
         "reconfigure_successful": "Reconfiguration was successful."
       }
     }

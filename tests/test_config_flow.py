@@ -98,3 +98,19 @@ async def test_api_credentials_unreachable_is_cannot_connect(hass):
         get_session.return_value = _make_session(_make_response(500))
         errors = await cf.validate_input(hass, {"account_id": "acct", "api_key": "key"})
     assert errors == {"base": "cannot_connect"}
+
+
+def test_compute_unique_id_prefers_account_id():
+    unique_id = cf._compute_unique_id(
+        {"account_id": "acct", "api_key": "key", "metrics_url": "http://10.0.0.5/metrics"}
+    )
+    assert unique_id == "acct"
+
+
+def test_compute_unique_id_falls_back_to_metrics_url():
+    unique_id = cf._compute_unique_id({"metrics_url": "http://10.0.0.5/metrics"})
+    assert unique_id == "http://10.0.0.5/metrics"
+
+
+def test_compute_unique_id_none_when_neither_present():
+    assert cf._compute_unique_id({}) is None

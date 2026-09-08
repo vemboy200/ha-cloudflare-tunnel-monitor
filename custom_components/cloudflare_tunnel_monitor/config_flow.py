@@ -134,6 +134,17 @@ async def validate_input(hass: HomeAssistant, user_input: dict) -> dict[str, str
 
     return errors
 
+def _compute_unique_id(data: dict) -> str | None:
+    """Derive a stable unique ID for a config entry.
+
+    account_id is preferred since it identifies a real Cloudflare account;
+    metrics_url is the fallback for metrics-only entries with no account_id.
+    """
+    account_id = data.get(CONF_ACCOUNT_ID)
+    if account_id:
+        return account_id
+    return data.get(CONF_METRICS_URL)
+
 class CloudflareConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Cloudflare config flow."""
 
@@ -186,6 +197,8 @@ class CloudflareConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             errors = await validate_input(self.hass, user_input)
             if not errors:
+                await self.async_set_unique_id(_compute_unique_id(user_input))
+                self._abort_if_unique_id_configured()
                 return self.async_create_entry(title="Cloudflare Tunnel Monitor", data=user_input)
 
         return self.async_show_form(
@@ -211,9 +224,16 @@ class CloudflareConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             errors = await validate_input(self.hass, user_input)
             if not errors:
+                unique_id = _compute_unique_id(user_input)
+                existing = self.hass.config_entries.async_entry_for_domain_unique_id(
+                    self.handler, unique_id
+                )
+                if existing is not None and existing.entry_id != reconfigure_entry.entry_id:
+                    return self.async_abort(reason="already_configured")
                 return self.async_update_reload_and_abort(
                     reconfigure_entry,
                     data=user_input,
+                    unique_id=unique_id,
                 )
 
         return self.async_show_form(
