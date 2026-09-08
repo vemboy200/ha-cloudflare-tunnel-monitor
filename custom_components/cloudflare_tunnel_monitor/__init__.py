@@ -6,7 +6,6 @@ from typing import Any
 
 import aiohttp
 import async_timeout
-
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
@@ -176,8 +175,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Set up Cloudflare Tunnel from a config entry."""
     hass.data.setdefault(DOMAIN, {})
 
-    api_coordinator = CloudflareApiCoordinator(hass, entry)
-    await api_coordinator.async_config_entry_first_refresh()
+    api_coordinator: CloudflareApiCoordinator | None = None
+    if entry.data.get(CONF_ACCOUNT_ID) and entry.data.get(CONF_API_KEY):
+        api_coordinator = CloudflareApiCoordinator(hass, entry)
+        await api_coordinator.async_config_entry_first_refresh()
 
     metrics_coordinator: CloudflaredMetricsCoordinator | None = None
     metrics_url = entry.data.get(CONF_METRICS_URL)

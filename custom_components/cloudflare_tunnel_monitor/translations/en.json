@@ -3,9 +3,16 @@
       "step": {
         "user": {
           "data": {
-            "account_id": "Account ID",
-            "api_key": "API Token",
-            "metrics_url": "Metrics URL (optional)"
+            "account_id": "Account ID (optional if using Metrics URL)",
+            "api_key": "API Token (optional if using Metrics URL)",
+            "metrics_url": "Metrics URL (optional if using API credentials)"
+          }
+        },
+        "reconfigure": {
+          "data": {
+            "account_id": "Account ID (optional if using Metrics URL)",
+            "api_key": "API Token (optional if using Metrics URL)",
+            "metrics_url": "Metrics URL (optional if using API credentials)"
           }
         }
       },
@@ -13,11 +20,13 @@
         "cannot_connect": "Cannot connect to the service, please check your API Token and internet connection.",
         "cannot_connect_metrics": "Cannot connect to the metrics endpoint. Verify the URL is reachable from Home Assistant.",
         "invalid_auth": "Invalid authentication, please check your credentials.",
+        "incomplete_api_credentials": "Provide both Account ID and API Token together, or leave both blank to use only the Metrics URL.",
+        "no_method_configured": "Provide either Cloudflare API credentials, a Metrics URL, or both.",
         "unknown": "Unknown error, please check the logs."
       },
       "abort": {
-        "single_instance_allowed": "Only a single configuration of this integration is allowed."
+        "single_instance_allowed": "Only a single configuration of this integration is allowed.",
+        "reconfigure_successful": "Reconfiguration was successful."
       }
     }
 }
-  
